@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Application, Assets, Container, Graphics, Sprite, Text, TextStyle } from "pixi.js";
+import { Application, Assets, Container, Graphics, Sprite, Text, TextStyle, Texture } from "pixi.js";
 import {
   axialKey,
   axialToPixel,
   boundsPixelEnvelope,
   isWithinBounds,
-  iterateBounds,
+  offsetRowForAxial,
   parseAxialKey,
   pixelToAxial,
 } from "../domain/hexMath";
+import { createTrimmedTerrainCanvas } from "../lib/terrainTrim";
 import type {
   AxialCoord,
   GridCalibration,
@@ -20,6 +21,7 @@ import type {
 
 const Z_MULTIPLIER = 1000;
 const COMFORT_ZOOM = 1.65;
+const TERRAIN_TRIM_SIGNATURE = "column-profile-v3";
 
 type PixiMapCanvasProps = {
   calibration: GridCalibration;
@@ -27,7 +29,6 @@ type PixiMapCanvasProps = {
   cells: Record<string, HexLayerSet>;
   selection: string[];
   lineStart: AxialCoord | null;
-  showGrid: boolean;
   activeTool: EditorTool;
   assetsById: Map<string, AssetManifestItem>;
   onHover: (coord: AxialCoord | null) => void;
@@ -70,6 +71,10 @@ function shouldTrackStroke(tool: EditorTool): boolean {
   return tool === "brush" || tool === "erase" || tool === "fog";
 }
 
+function shouldTrimTerrainBottom(coord: AxialCoord, bounds: MapBounds): boolean {
+  return offsetRowForAxial(coord) < bounds.maxR;
+}
+
 export function PixiMapCanvas(props: PixiMapCanvasProps) {
   const {
     calibration,
@@ -77,7 +82,6 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
     cells,
     selection,
     lineStart,
-    showGrid,
     activeTool,
     assetsById,
     onHover,
@@ -107,11 +111,16 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
   const hasUserMovedCameraRef = useRef(false);
   const loadedAssetPathsRef = useRef<Set<string>>(new Set());
   const pendingAssetLoadsRef = useRef<Map<string, Promise<void>>>(new Map());
+  const trimmedTerrainTexturesRef = useRef<Map<string, Texture>>(new Map());
+  const pendingTrimmedTerrainTexturesRef = useRef<Map<string, Promise<void>>>(new Map());
+  const trimSignatureRef = useRef<string>("");
 
   const selectionSet = useMemo(() => new Set(selection), [selection]);
 
   useEffect(() => {
     let disposed = false;
+    const trimmedTerrainTextures = trimmedTerrainTexturesRef.current;
+    const pendingTrimmedTerrainTextures = pendingTrimmedTerrainTexturesRef.current;
 
     async function setup() {
       const root = rootRef.current;
@@ -178,6 +187,11 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       gridRef.current = null;
       selectionRef.current = null;
       lastHoverKeyRef.current = null;
+      for (const texture of trimmedTerrainTextures.values()) {
+        texture.destroy(true);
+      }
+      trimmedTerrainTextures.clear();
+      pendingTrimmedTerrainTextures.clear();
       setLocalHoverCoord(null);
       setAppReady(false);
     };
@@ -198,6 +212,15 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
     const activeMapLayer = mapLayer;
     const activeFogLayer = fogLayer;
     let cancelled = false;
+
+    if (trimSignatureRef.current !== TERRAIN_TRIM_SIGNATURE) {
+      for (const texture of trimmedTerrainTexturesRef.current.values()) {
+        texture.destroy(true);
+      }
+      trimmedTerrainTexturesRef.current.clear();
+      pendingTrimmedTerrainTexturesRef.current.clear();
+      trimSignatureRef.current = TERRAIN_TRIM_SIGNATURE;
+    }
 
     async function ensureAsset(path: string): Promise<void> {
       if (loadedAssetPathsRef.current.has(path)) {
@@ -225,26 +248,76 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       await loadPromise;
     }
 
+    async function ensureTrimmedTerrainTexture(path: string): Promise<void> {
+      if (trimmedTerrainTexturesRef.current.has(path)) {
+        return;
+      }
+
+      const pending = pendingTrimmedTerrainTexturesRef.current.get(path);
+      if (pending) {
+        await pending;
+        return;
+      }
+
+      const trimPromise = new Promise<void>((resolve) => {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.onload = () => {
+          const width = image.naturalWidth || image.width;
+          const height = image.naturalHeight || image.height;
+          if (width <= 0 || height <= 0) {
+            resolve();
+            return;
+          }
+
+          const trimmedCanvas = createTrimmedTerrainCanvas(image);
+          if (!trimmedCanvas) {
+            resolve();
+            return;
+          }
+
+          const texture = Texture.from(trimmedCanvas);
+          trimmedTerrainTexturesRef.current.set(path, texture);
+          resolve();
+        };
+        image.onerror = () => resolve();
+        image.src = path;
+      }).finally(() => {
+        pendingTrimmedTerrainTexturesRef.current.delete(path);
+      });
+
+      pendingTrimmedTerrainTexturesRef.current.set(path, trimPromise);
+      await trimPromise;
+    }
+
     async function redrawMap(): Promise<void> {
       const requiredPaths = new Set<string>();
+      const requiredTrimmedTerrainPaths = new Set<string>();
 
-      function collectPath(tileId: string): void {
+      function collectPath(tileId: string, trimTerrainBottom = false): void {
         const item = assetsById.get(tileId);
         if (!item) {
           return;
         }
         requiredPaths.add(item.path);
+        if (trimTerrainBottom) {
+          requiredTrimmedTerrainPaths.add(item.path);
+        }
       }
 
-      for (const cell of Object.values(cells)) {
+      for (const [key, cell] of Object.entries(cells)) {
+        const coord = parseAxialKey(key);
         if (cell.baseTileId) {
-          collectPath(cell.baseTileId);
+          collectPath(cell.baseTileId, shouldTrimTerrainBottom(coord, bounds));
         }
-        cell.overlayTileIds.forEach(collectPath);
-        cell.markerTileIds.forEach(collectPath);
+        cell.overlayTileIds.forEach((tileId) => collectPath(tileId));
+        cell.markerTileIds.forEach((tileId) => collectPath(tileId));
       }
 
       await Promise.all([...requiredPaths].map((path) => ensureAsset(path)));
+      await Promise.all(
+        [...requiredTrimmedTerrainPaths].map((path) => ensureTrimmedTerrainTexture(path)),
+      );
       if (cancelled) {
         return;
       }
@@ -272,12 +345,21 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       const tileAnchorX = calibration.spriteAnchorPx.x / calibration.tileFramePx.w;
       const tileAnchorY = calibration.spriteAnchorPx.y / calibration.tileFramePx.h;
 
-      function addTileSprite(tileId: string, center: { x: number; y: number }, layerPriority: number): void {
+      function addTileSprite(
+        tileId: string,
+        center: { x: number; y: number },
+        layerPriority: number,
+        options?: { trimTerrainBottom?: boolean },
+      ): void {
         const item = assetsById.get(tileId);
         if (!item) {
           return;
         }
-        const sprite = Sprite.from(item.path);
+        const texture =
+          options?.trimTerrainBottom
+            ? trimmedTerrainTexturesRef.current.get(item.path) ?? Texture.from(item.path)
+            : Texture.from(item.path);
+        const sprite = new Sprite(texture);
         sprite.anchor.set(tileAnchorX, tileAnchorY);
         sprite.position.set(center.x, center.y);
         sprite.zIndex = zIndexFor(center, layerPriority);
@@ -287,9 +369,10 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       for (const [key, cell] of Object.entries(cells)) {
         const coord = parseAxialKey(key);
         const center = axialToPixel(coord, calibration);
+        const trimTerrainBottom = shouldTrimTerrainBottom(coord, bounds);
 
         if (cell.baseTileId) {
-          addTileSprite(cell.baseTileId, center, 0);
+          addTileSprite(cell.baseTileId, center, 0, { trimTerrainBottom });
         }
 
         cell.overlayTileIds.forEach((tileId, index) => {
@@ -324,7 +407,7 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
     return () => {
       cancelled = true;
     };
-  }, [appReady, assetsById, calibration, cells]);
+  }, [appReady, assetsById, bounds, calibration, cells]);
 
   useEffect(() => {
     if (!appReady) {
@@ -336,18 +419,9 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       return;
     }
 
+    // Grid overlay intentionally disabled; terrain art already carries boundary cues.
     gridLayer.clear();
-
-    if (showGrid) {
-      gridLayer.lineStyle(2.4, 0xb59a67, 0.52);
-      gridLayer.beginFill(0x6f5a3a, 0.08);
-      for (const coord of iterateBounds(bounds)) {
-        const center = axialToPixel(coord, calibration);
-        gridLayer.drawPolygon(hexPoints(center, calibration.hexSizePx));
-      }
-      gridLayer.endFill();
-    }
-  }, [appReady, bounds, calibration, showGrid]);
+  }, [appReady, bounds, calibration]);
 
   useEffect(() => {
     if (!appReady) {

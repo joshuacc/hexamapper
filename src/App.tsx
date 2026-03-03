@@ -56,7 +56,6 @@ export default function App() {
   const selection = useEditorStore((state) => state.selection.cells);
   const searchQuery = useEditorStore((state) => state.searchQuery);
   const selectedCategory = useEditorStore((state) => state.selectedCategory);
-  const showGrid = useEditorStore((state) => state.showGrid);
   const lineStart = useEditorStore((state) => state.lineStart);
   const statusMessage = useEditorStore((state) => state.lastStatusMessage);
   const historyPastLength = useEditorStore((state) => state.historyPast.length);
@@ -69,7 +68,6 @@ export default function App() {
   const setHoverCoord = useEditorStore((state) => state.setHoverCoord);
   const setSearchQuery = useEditorStore((state) => state.setSearchQuery);
   const setSelectedCategory = useEditorStore((state) => state.setSelectedCategory);
-  const setShowGrid = useEditorStore((state) => state.setShowGrid);
 
   const beginStroke = useEditorStore((state) => state.beginStroke);
   const commitStroke = useEditorStore((state) => state.commitStroke);
@@ -274,7 +272,6 @@ export default function App() {
         fogBrushLevel={fogBrushLevel}
         canUndo={historyPastLength > 0}
         canRedo={historyFutureLength > 0}
-        showGrid={showGrid}
         onSetTool={(tool) => {
           setTool(tool);
           if (tool === "fog") {
@@ -285,7 +282,6 @@ export default function App() {
         onSetFog={setFogBrushLevel}
         onUndo={undo}
         onRedo={redo}
-        onToggleGrid={setShowGrid}
         onNewProject={onNewProject}
         onLoadProject={onLoadProject}
         onSaveProject={onSaveProject}
@@ -319,7 +315,6 @@ export default function App() {
             cells={project.cells}
             selection={selection}
             lineStart={lineStart}
-            showGrid={showGrid}
             activeTool={activeTool}
             assetsById={manifestById}
             onHover={setHoverCoord}

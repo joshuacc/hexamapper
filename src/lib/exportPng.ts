@@ -1,5 +1,11 @@
-import { axialToPixel, boundsPixelEnvelope, parseAxialKey } from "../domain/hexMath";
-import type { AssetManifestItem, HexProjectV1 } from "../domain/types";
+import {
+  axialToPixel,
+  boundsPixelEnvelope,
+  offsetRowForAxial,
+  parseAxialKey,
+} from "../domain/hexMath";
+import { createTrimmedTerrainCanvas } from "./terrainTrim";
+import type { AssetManifestItem, HexProjectV1, MapBounds } from "../domain/types";
 
 const imageCache = new Map<string, Promise<HTMLImageElement>>();
 
@@ -37,7 +43,12 @@ type DrawSprite = {
   x: number;
   y: number;
   z: number;
+  trimTerrainBottom: boolean;
 };
+
+function shouldTrimTerrainBottom(coord: { q: number; r: number }, bounds: MapBounds): boolean {
+  return offsetRowForAxial(coord) < bounds.maxR;
+}
 
 export async function renderProjectToBlob(
   project: HexProjectV1,
@@ -57,7 +68,7 @@ export async function renderProjectToBlob(
     const coord = parseAxialKey(key);
     const center = axialToPixel(coord, calibration);
 
-    function pushTile(tileId: string, layerPriority: number): void {
+    function pushTile(tileId: string, layerPriority: number, trimTerrainBottom = false): void {
       const item = assetsById.get(tileId);
       if (!item) {
         return;
@@ -78,11 +89,12 @@ export async function renderProjectToBlob(
         x: topLeftX,
         y: topLeftY,
         z: zIndexFor(center.y, center.x, layerPriority),
+        trimTerrainBottom,
       });
     }
 
     if (cell.baseTileId) {
-      pushTile(cell.baseTileId, 0);
+      pushTile(cell.baseTileId, 0, shouldTrimTerrainBottom(coord, project.metadata.maxBounds));
     }
 
     cell.overlayTileIds.forEach((tileId, idx) => pushTile(tileId, 1 + idx * 0.01));
@@ -101,10 +113,26 @@ export async function renderProjectToBlob(
   }
 
   sprites.sort((a, b) => a.z - b.z);
+  const trimmedCanvasCache = new Map<string, HTMLCanvasElement | null>();
 
   for (const sprite of sprites) {
     const image = await loadImage(sprite.src);
-    ctx.drawImage(image, sprite.x - minX, sprite.y - minY);
+    const drawX = sprite.x - minX;
+    const drawY = sprite.y - minY;
+
+    if (sprite.trimTerrainBottom) {
+      if (!trimmedCanvasCache.has(sprite.src)) {
+        trimmedCanvasCache.set(sprite.src, createTrimmedTerrainCanvas(image));
+      }
+
+      const trimmedCanvas = trimmedCanvasCache.get(sprite.src);
+      if (trimmedCanvas) {
+        ctx.drawImage(trimmedCanvas, drawX, drawY);
+        continue;
+      }
+    }
+
+    ctx.drawImage(image, drawX, drawY);
   }
 
   for (const [key, cell] of Object.entries(project.cells)) {

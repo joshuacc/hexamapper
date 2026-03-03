@@ -11,8 +11,12 @@ export function parseAxialKey(key: string): AxialCoord {
   return { q: Number(qPart), r: Number(rPart) };
 }
 
+export function offsetRowForAxial(coord: AxialCoord): number {
+  return coord.r + Math.floor((coord.q - (coord.q & 1)) / 2);
+}
+
 export function isWithinBounds(coord: AxialCoord, bounds: MapBounds): boolean {
-  const offsetRow = coord.r + Math.floor((coord.q - (coord.q & 1)) / 2);
+  const offsetRow = offsetRowForAxial(coord);
   return (
     coord.q >= bounds.minQ &&
     coord.q <= bounds.maxQ &&

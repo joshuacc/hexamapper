@@ -23,13 +23,11 @@ type ToolbarProps = {
   fogBrushLevel: FogLevel;
   canUndo: boolean;
   canRedo: boolean;
-  showGrid: boolean;
   onSetTool: (tool: EditorTool) => void;
   onSetLayer: (layer: EditorLayer) => void;
   onSetFog: (level: FogLevel) => void;
   onUndo: () => void;
   onRedo: () => void;
-  onToggleGrid: (show: boolean) => void;
   onNewProject: () => void;
   onLoadProject: () => void;
   onSaveProject: () => void;
@@ -43,13 +41,11 @@ export function Toolbar(props: ToolbarProps) {
     fogBrushLevel,
     canUndo,
     canRedo,
-    showGrid,
     onSetTool,
     onSetLayer,
     onSetFog,
     onUndo,
     onRedo,
-    onToggleGrid,
     onNewProject,
     onLoadProject,
     onSaveProject,
@@ -102,13 +98,6 @@ export function Toolbar(props: ToolbarProps) {
         </button>
         <button type="button" className="small-btn" onClick={onRedo} disabled={!canRedo}>
           Redo
-        </button>
-        <button
-          type="button"
-          className={showGrid ? "small-btn active" : "small-btn"}
-          onClick={() => onToggleGrid(!showGrid)}
-        >
-          Grid
         </button>
         <button type="button" className="small-btn" onClick={onNewProject}>
           New
