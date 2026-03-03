@@ -26,6 +26,7 @@ dist-ssr
 # Local debug artifacts
 test-results/
 playwright-report/
+*:Zone.Identifier
 after-painted-cursed.png
 after-wait-2s.png
 current-map-ui.png
