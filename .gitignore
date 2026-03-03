@@ -1,0 +1,39 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local debug artifacts
+test-results/
+playwright-report/
+after-painted-cursed.png
+after-wait-2s.png
+current-map-ui.png
+desktop-filled-after-fixes.png
+desktop-painted-current.png
+desktop-single-brush-after-comfort-zoom.png
+desktop-single-brush-lush.png
+empty-map-grid-visibility.png
+filled-map-after-fixes.png
+map-initial.png
+post-fix-paint-center.png
