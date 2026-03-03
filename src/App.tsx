@@ -121,15 +121,25 @@ export default function App() {
     }
   }, [selectedTileId, setSelectedTile]);
 
+  useEffect(() => {
+    if (selectedCategory === "All") {
+      return;
+    }
+    const visibleCategories = new Set(groupedCategories(searchManifest(searchQuery, "all")));
+    if (!visibleCategories.has(selectedCategory)) {
+      setSelectedCategory("All");
+    }
+  }, [searchQuery, selectedCategory, setSelectedCategory]);
+
   const selectedTileName = selectedTileId ? manifestById.get(selectedTileId)?.name ?? selectedTileId : "(none)";
 
   const filteredItems = useMemo(() => {
-    const items = searchManifest(searchQuery, activeLayer === "fog" ? "all" : activeLayer);
+    const items = searchManifest(searchQuery, "all");
     if (selectedCategory === "All") {
       return items;
     }
     return items.filter((item) => item.category === selectedCategory);
-  }, [activeLayer, searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory]);
 
   const categories = useMemo(() => groupedCategories(filteredItems), [filteredItems]);
 

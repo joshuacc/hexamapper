@@ -4,6 +4,9 @@ import {
   axialKey,
   axialToPixel,
   boundsPixelEnvelope,
+  hexHorizontalRadiusPx,
+  hexOverlayCenterOffsetPx,
+  hexVerticalRadiusPx,
   isWithinBounds,
   offsetRowForAxial,
   parseAxialKey,
@@ -21,7 +24,7 @@ import type {
 
 const Z_MULTIPLIER = 1000;
 const COMFORT_ZOOM = 1.65;
-const TERRAIN_TRIM_SIGNATURE = "column-profile-v3";
+const TERRAIN_TRIM_SIGNATURE = "column-profile-v4";
 
 type PixiMapCanvasProps = {
   calibration: GridCalibration;
@@ -50,14 +53,26 @@ function zIndexFor(point: { x: number; y: number }, layerPriority: number): numb
   return yKey + layerPriority * 10 + xTie;
 }
 
-function hexPoints(center: { x: number; y: number }, size: number): number[] {
-  const points: number[] = [];
-  for (let corner = 0; corner < 6; corner += 1) {
-    const angle = (Math.PI / 180) * (60 * corner);
-    points.push(center.x + size * Math.cos(angle));
-    points.push(center.y + size * Math.sin(angle));
-  }
-  return points;
+function hexPoints(center: { x: number; y: number }, calibration: GridCalibration): number[] {
+  const horizontalRadius = hexHorizontalRadiusPx(calibration);
+  const verticalRadius = hexVerticalRadiusPx(calibration);
+  const offset = hexOverlayCenterOffsetPx(calibration);
+  const cx = center.x + offset.x;
+  const cy = center.y + offset.y;
+  return [
+    cx + horizontalRadius,
+    cy,
+    cx + horizontalRadius / 2,
+    cy + verticalRadius,
+    cx - horizontalRadius / 2,
+    cy + verticalRadius,
+    cx - horizontalRadius,
+    cy,
+    cx - horizontalRadius / 2,
+    cy - verticalRadius,
+    cx + horizontalRadius / 2,
+    cy - verticalRadius,
+  ];
 }
 
 function clearContainer(container: Container): void {
@@ -386,7 +401,7 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
         if (cell.fog !== "none") {
           const alpha = cell.fog === "full" ? 0.75 : 0.4;
           activeFogLayer.beginFill(0x1b1310, alpha);
-          activeFogLayer.drawPolygon(hexPoints(center, calibration.hexSizePx));
+          activeFogLayer.drawPolygon(hexPoints(center, calibration));
           activeFogLayer.endFill();
         }
 
@@ -441,7 +456,7 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       for (const key of selectionSet) {
         const coord = parseAxialKey(key);
         const center = axialToPixel(coord, calibration);
-        selectionLayer.drawPolygon(hexPoints(center, calibration.hexSizePx));
+        selectionLayer.drawPolygon(hexPoints(center, calibration));
       }
       selectionLayer.endFill();
     }
@@ -450,14 +465,14 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       const center = axialToPixel(localHoverCoord, calibration);
       selectionLayer.lineStyle(2, 0xf7e9b5, 0.85);
       selectionLayer.beginFill(0xf7e9b5, 0.08);
-      selectionLayer.drawPolygon(hexPoints(center, calibration.hexSizePx));
+      selectionLayer.drawPolygon(hexPoints(center, calibration));
       selectionLayer.endFill();
     }
 
     if (lineStart) {
       const center = axialToPixel(lineStart, calibration);
       selectionLayer.lineStyle(4, 0x7fd5ff, 0.95);
-      selectionLayer.drawPolygon(hexPoints(center, calibration.hexSizePx));
+      selectionLayer.drawPolygon(hexPoints(center, calibration));
     }
   }, [appReady, calibration, lineStart, localHoverCoord, selectionSet]);
 

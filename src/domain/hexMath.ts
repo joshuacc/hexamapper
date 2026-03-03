@@ -1,6 +1,11 @@
 import type { AxialCoord, GridCalibration, MapBounds } from "./types";
 
 export const SQRT3 = Math.sqrt(3);
+const HEX_VERTICAL_SHRINK_REFERENCE_PX = 6;
+const HEX_HORIZONTAL_SHRINK_REFERENCE_PX = 2;
+const HEX_FACE_VERTICAL_INSET_REFERENCE_PX = 8;
+const TERRAIN_REFERENCE_HEIGHT_PX = 194;
+const TERRAIN_REFERENCE_WIDTH_PX = 224;
 
 export function axialKey(coord: AxialCoord): string {
   return `${coord.q},${coord.r}`;
@@ -15,6 +20,46 @@ export function offsetRowForAxial(coord: AxialCoord): number {
   return coord.r + Math.floor((coord.q - (coord.q & 1)) / 2);
 }
 
+export function hexVerticalShrinkPx(calibration: GridCalibration): number {
+  return (calibration.tileFramePx.h * HEX_VERTICAL_SHRINK_REFERENCE_PX) / TERRAIN_REFERENCE_HEIGHT_PX;
+}
+
+export function hexHorizontalShrinkPx(calibration: GridCalibration): number {
+  return (calibration.tileFramePx.w * HEX_HORIZONTAL_SHRINK_REFERENCE_PX) / TERRAIN_REFERENCE_WIDTH_PX;
+}
+
+export function hexColumnStepPx(calibration: GridCalibration): number {
+  return Math.max(1, calibration.hexSizePx * 1.5 - hexHorizontalShrinkPx(calibration));
+}
+
+export function hexRowHeightPx(calibration: GridCalibration): number {
+  return Math.max(1, calibration.hexSizePx * SQRT3 - hexVerticalShrinkPx(calibration));
+}
+
+export function hexHorizontalRadiusPx(calibration: GridCalibration): number {
+  return (hexColumnStepPx(calibration) * 2) / 3;
+}
+
+export function hexVerticalRadiusPx(calibration: GridCalibration): number {
+  return Math.max(
+    1,
+    (calibration.hexSizePx * SQRT3) / 2 - hexFaceVerticalInsetPx(calibration) / 2,
+  );
+}
+
+export function hexFaceVerticalInsetPx(calibration: GridCalibration): number {
+  return (
+    (calibration.tileFramePx.h * HEX_FACE_VERTICAL_INSET_REFERENCE_PX) / TERRAIN_REFERENCE_HEIGHT_PX
+  );
+}
+
+export function hexOverlayCenterOffsetPx(calibration: GridCalibration): { x: number; y: number } {
+  return {
+    x: 0,
+    y: -hexFaceVerticalInsetPx(calibration) / 2,
+  };
+}
+
 export function isWithinBounds(coord: AxialCoord, bounds: MapBounds): boolean {
   const offsetRow = offsetRowForAxial(coord);
   return (
@@ -26,9 +71,10 @@ export function isWithinBounds(coord: AxialCoord, bounds: MapBounds): boolean {
 }
 
 export function axialToPixel(coord: AxialCoord, calibration: GridCalibration): { x: number; y: number } {
-  const size = calibration.hexSizePx;
-  const x = size * 1.5 * coord.q;
-  const y = size * SQRT3 * (coord.r + coord.q / 2);
+  const columnStep = hexColumnStepPx(calibration);
+  const rowHeight = hexRowHeightPx(calibration);
+  const x = columnStep * coord.q;
+  const y = rowHeight * (coord.r + coord.q / 2);
 
   return {
     x: x + calibration.originPx.x + calibration.manualNudgePx.x,
@@ -40,12 +86,13 @@ export function pixelToAxial(
   pixel: { x: number; y: number },
   calibration: GridCalibration,
 ): AxialCoord {
-  const size = calibration.hexSizePx;
+  const columnStep = hexColumnStepPx(calibration);
+  const rowHeight = hexRowHeightPx(calibration);
   const localX = pixel.x - calibration.originPx.x - calibration.manualNudgePx.x;
   const localY = pixel.y - calibration.originPx.y - calibration.manualNudgePx.y;
 
-  const q = (2 / 3) * localX / size;
-  const r = ((-1 / 3) * localX + (SQRT3 / 3) * localY) / size;
+  const q = localX / columnStep;
+  const r = localY / rowHeight - q / 2;
 
   return roundAxial({ q, r });
 }

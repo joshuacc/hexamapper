@@ -1,6 +1,9 @@
 import {
   axialToPixel,
   boundsPixelEnvelope,
+  hexHorizontalRadiusPx,
+  hexOverlayCenterOffsetPx,
+  hexVerticalRadiusPx,
   offsetRowForAxial,
   parseAxialKey,
 } from "../domain/hexMath";
@@ -29,13 +32,20 @@ function zIndexFor(y: number, x: number, layerPriority: number): number {
   return Math.floor(y * 1000) + Math.floor(layerPriority * 10) + Math.floor(x % 997);
 }
 
-function hexPoints(centerX: number, centerY: number, size: number): Array<[number, number]> {
-  const points: Array<[number, number]> = [];
-  for (let corner = 0; corner < 6; corner += 1) {
-    const angle = (Math.PI / 180) * (60 * corner);
-    points.push([centerX + size * Math.cos(angle), centerY + size * Math.sin(angle)]);
-  }
-  return points;
+function hexPoints(
+  centerX: number,
+  centerY: number,
+  horizontalRadius: number,
+  verticalRadius: number,
+): Array<[number, number]> {
+  return [
+    [centerX + horizontalRadius, centerY],
+    [centerX + horizontalRadius / 2, centerY + verticalRadius],
+    [centerX - horizontalRadius / 2, centerY + verticalRadius],
+    [centerX - horizontalRadius, centerY],
+    [centerX - horizontalRadius / 2, centerY - verticalRadius],
+    [centerX + horizontalRadius / 2, centerY - verticalRadius],
+  ];
 }
 
 type DrawSprite = {
@@ -55,6 +65,9 @@ export async function renderProjectToBlob(
   assetsById: Map<string, AssetManifestItem>,
 ): Promise<Blob> {
   const calibration = project.calibration;
+  const horizontalRadius = hexHorizontalRadiusPx(calibration);
+  const verticalRadius = hexVerticalRadiusPx(calibration);
+  const overlayOffset = hexOverlayCenterOffsetPx(calibration);
 
   const envelope = boundsPixelEnvelope(project.metadata.maxBounds, calibration);
   let minX = envelope.minX;
@@ -141,7 +154,12 @@ export async function renderProjectToBlob(
 
     if (cell.fog !== "none") {
       ctx.fillStyle = cell.fog === "full" ? "rgba(24,16,12,0.75)" : "rgba(24,16,12,0.42)";
-      const points = hexPoints(center.x - minX, center.y - minY, calibration.hexSizePx);
+      const points = hexPoints(
+        center.x + overlayOffset.x - minX,
+        center.y + overlayOffset.y - minY,
+        horizontalRadius,
+        verticalRadius,
+      );
       ctx.beginPath();
       ctx.moveTo(points[0][0], points[0][1]);
       for (let idx = 1; idx < points.length; idx += 1) {
