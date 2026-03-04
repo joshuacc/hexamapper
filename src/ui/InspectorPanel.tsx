@@ -108,7 +108,14 @@ export function InspectorPanel(props: InspectorPanelProps) {
             />
           </section>
         </>
-      ) : null}
+      ) : (
+        <section className="inspector-section">
+          <h3>Hex Details</h3>
+          <p className="inspector-empty-note">
+            Use the Inspect tool, then click any hex to edit its fog, label, and notes.
+          </p>
+        </section>
+      )}
 
       <section className="inspector-section">
         <h3>Move Selection</h3>

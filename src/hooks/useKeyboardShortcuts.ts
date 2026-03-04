@@ -36,7 +36,7 @@ export function useKeyboardShortcuts(): void {
       } else if (key === "g") {
         setTool("fog");
         setLayer("fog");
-      } else if (key === "v") {
+      } else if (key === "i" || key === "v") {
         setTool("select");
       }
     }

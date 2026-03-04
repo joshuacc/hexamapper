@@ -5,7 +5,7 @@ const TOOL_OPTIONS: Array<{ tool: EditorTool; label: string; shortcut: string }>
   { tool: "erase", label: "Erase", shortcut: "E" },
   { tool: "fill", label: "Fill", shortcut: "F" },
   { tool: "line", label: "Line", shortcut: "Shift+L" },
-  { tool: "select", label: "Select", shortcut: "V" },
+  { tool: "select", label: "Inspect", shortcut: "I / V" },
   { tool: "label", label: "Label", shortcut: "L" },
   { tool: "fog", label: "Fog", shortcut: "G" },
 ];

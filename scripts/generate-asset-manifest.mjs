@@ -64,7 +64,6 @@ function extractTags(name, pack, category) {
 
 function inferLayer(name, category) {
   const lower = name.toLowerCase();
-  const categoryLower = category.toLowerCase();
 
   if (
     lower.includes("pin") ||
@@ -102,11 +101,11 @@ function inferLayer(name, category) {
     return "overlay";
   }
 
-  if (categoryLower.includes("mountain") || categoryLower.includes("urban") || categoryLower.includes("ruin")) {
-    return "overlay";
+  if (lower.startsWith("hex -")) {
+    return "base";
   }
 
-  return lower.startsWith("hex -") ? "overlay" : "marker";
+  return "marker";
 }
 
 function assetUrlFromAbsolutePath(absolutePath) {

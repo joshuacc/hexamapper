@@ -131,6 +131,49 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
   const trimSignatureRef = useRef<string>("");
 
   const selectionSet = useMemo(() => new Set(selection), [selection]);
+  const cameraFitBounds = useMemo(
+    () => ({
+      minQ: bounds.minQ,
+      maxQ: bounds.maxQ,
+      minR: bounds.minR,
+      maxR: bounds.maxR,
+    }),
+    [bounds.maxQ, bounds.maxR, bounds.minQ, bounds.minR],
+  );
+  const cameraFitCalibration = useMemo(
+    () => ({
+      orientation: calibration.orientation,
+      hexSizePx: calibration.hexSizePx,
+      originPx: {
+        x: calibration.originPx.x,
+        y: calibration.originPx.y,
+      },
+      tileFramePx: {
+        w: calibration.tileFramePx.w,
+        h: calibration.tileFramePx.h,
+      },
+      spriteAnchorPx: {
+        x: calibration.spriteAnchorPx.x,
+        y: calibration.spriteAnchorPx.y,
+      },
+      manualNudgePx: {
+        x: calibration.manualNudgePx.x,
+        y: calibration.manualNudgePx.y,
+      },
+    }),
+    [
+      calibration.hexSizePx,
+      calibration.manualNudgePx.x,
+      calibration.manualNudgePx.y,
+      calibration.orientation,
+      calibration.originPx.x,
+      calibration.originPx.y,
+      calibration.spriteAnchorPx.x,
+      calibration.spriteAnchorPx.y,
+      calibration.tileFramePx.h,
+      calibration.tileFramePx.w,
+    ],
+  );
 
   useEffect(() => {
     let disposed = false;
@@ -701,7 +744,7 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       const viewportWidth = Math.max(1, app.screen.width);
       const viewportHeight = Math.max(1, app.screen.height);
 
-      const envelope = boundsPixelEnvelope(bounds, calibration);
+      const envelope = boundsPixelEnvelope(cameraFitBounds, cameraFitCalibration);
       const mapWidth = Math.max(1, envelope.maxX - envelope.minX);
       const mapHeight = Math.max(1, envelope.maxY - envelope.minY);
       const padding = Math.min(72, Math.floor(Math.min(viewportWidth, viewportHeight) * 0.12));
@@ -738,7 +781,7 @@ export function PixiMapCanvas(props: PixiMapCanvasProps) {
       resizeObserver.disconnect();
       window.removeEventListener("resize", fitCamera);
     };
-  }, [appReady, bounds, calibration]);
+  }, [appReady, cameraFitBounds, cameraFitCalibration]);
 
   return <div className="map-canvas-root" ref={rootRef} />;
 }

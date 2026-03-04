@@ -12,11 +12,12 @@ type StatusBarProps = {
 export function StatusBar(props: StatusBarProps) {
   const { activeTool, activeLayer, selectionCount, statusMessage, selectedTileName } = props;
   const hoverCoord = useEditorStore((state) => state.hoverCoord);
+  const toolName = activeTool === "select" ? "inspect" : activeTool;
 
   return (
     <footer className="status-bar">
       <span>
-        <strong>Tool:</strong> {activeTool}
+        <strong>Tool:</strong> {toolName}
       </span>
       <span>
         <strong>Layer:</strong> {activeLayer}

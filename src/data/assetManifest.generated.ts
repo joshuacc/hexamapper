@@ -2158,7 +2158,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountain-volcano-badlands-2",
@@ -2177,7 +2177,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountain-volcano-cursed-1",
@@ -2196,7 +2196,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountain-volcano-cursed-2",
@@ -2215,7 +2215,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountain-volcano-lush-1",
@@ -2234,7 +2234,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountain-volcano-lush-2",
@@ -2253,7 +2253,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountain-volcano-rocky-1",
@@ -2272,7 +2272,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountain-volcano-rocky-2",
@@ -2291,7 +2291,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountain-volcano-snowy-1",
@@ -2310,7 +2310,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountain-volcano-snowy-2",
@@ -2329,7 +2329,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountain",
       "volcano"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountains-foothills-badlands",
@@ -2348,7 +2348,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "foothills"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountains-foothills-cursed",
@@ -2367,7 +2367,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "foothills"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-foothills-lush",
@@ -2386,7 +2386,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "foothills"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-foothills-rocky",
@@ -2405,7 +2405,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "foothills"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-foothills-snowy",
@@ -2424,7 +2424,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "foothills"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountains-low-badlands",
@@ -2442,7 +2442,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "badlands",
       "mountains"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountains-low-cursed",
@@ -2460,7 +2460,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "cursed",
       "mountains"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-low-lush",
@@ -2478,7 +2478,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "mountains"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-low-rocky",
@@ -2496,7 +2496,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "rocky",
       "mountains"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-low-snowy",
@@ -2514,7 +2514,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "snowy",
       "mountains"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountains-medium-badlands",
@@ -2533,7 +2533,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "medium"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountains-medium-cursed",
@@ -2552,7 +2552,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "medium"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-medium-lush",
@@ -2571,7 +2571,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "medium"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-medium-rocky",
@@ -2590,7 +2590,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "medium"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-medium-snowy",
@@ -2609,7 +2609,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "medium"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountains-peak-badlands",
@@ -2628,7 +2628,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "peak"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-mountains-peak-cursed",
@@ -2647,7 +2647,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "peak"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-peak-lush",
@@ -2666,7 +2666,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "peak"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-peak-rocky",
@@ -2685,7 +2685,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "peak"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-mountains-peak-snowy",
@@ -2704,7 +2704,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "mountains",
       "peak"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-plains-cursed-1",
@@ -4064,7 +4064,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "ruin",
       "cursed"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-ruin-desert",
@@ -4081,7 +4081,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "ruin",
       "desert"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-ruin-dry",
@@ -4098,7 +4098,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "ruin",
       "dry"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-ruin-lush",
@@ -4115,7 +4115,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "ruin",
       "lush"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-snow-area-1",
@@ -4457,7 +4457,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "cursed",
       "city"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-city-dry",
@@ -4475,7 +4475,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "dry",
       "city"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-city-lush",
@@ -4493,7 +4493,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "city"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-farm-cursed",
@@ -4511,7 +4511,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "cursed",
       "farm"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-farm-dead",
@@ -4529,7 +4529,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "dead",
       "farm"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-farm-lush",
@@ -4547,7 +4547,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "farm"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-farmland-dead-1",
@@ -4565,7 +4565,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "dead",
       "farmland"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-farmland-dead-2",
@@ -4583,7 +4583,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "dead",
       "farmland"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-farmland-dead-3",
@@ -4601,7 +4601,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "dead",
       "farmland"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-farmland-lush-1",
@@ -4619,7 +4619,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "farmland"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-farmland-lush-2",
@@ -4637,7 +4637,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "farmland"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-farmland-lush-3",
@@ -4655,7 +4655,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "farmland"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-modern-town-abandoned-dead-1",
@@ -4675,7 +4675,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "town",
       "abandoned"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-modern-town-abandoned-dead-2",
@@ -4695,7 +4695,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "town",
       "abandoned"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-modern-town-abandoned-lush-1",
@@ -4715,7 +4715,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "town",
       "abandoned"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-modern-town-abandoned-lush-2",
@@ -4735,7 +4735,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "town",
       "abandoned"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-modern-town-inhabited-dead-1",
@@ -4755,7 +4755,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "town",
       "inhabited"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-modern-town-inhabited-dead-2",
@@ -4775,7 +4775,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "town",
       "inhabited"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-modern-town-inhabited-lush-1",
@@ -4795,7 +4795,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "town",
       "inhabited"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-modern-town-inhabited-lush-2",
@@ -4815,7 +4815,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "town",
       "inhabited"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-modern-town-lumber-yard-dead",
@@ -4836,7 +4836,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lumber",
       "yard"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-modern-town-lumber-yard-lush",
@@ -4857,7 +4857,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lumber",
       "yard"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-monastery-cursed",
@@ -4875,7 +4875,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "cursed",
       "monastery"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-monastery-dead",
@@ -4893,7 +4893,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "dead",
       "monastery"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-monastery-lush",
@@ -4911,7 +4911,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "monastery"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-tower-cursed",
@@ -4929,7 +4929,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "cursed",
       "tower"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-tower-dead",
@@ -4947,7 +4947,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "dead",
       "tower"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-tower-lush",
@@ -4965,7 +4965,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "tower"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-town-cursed",
@@ -4983,7 +4983,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "cursed",
       "town"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-urban-town-dead",
@@ -5001,7 +5001,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "dead",
       "town"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "base:hex-urban-town-lush",
@@ -5019,7 +5019,7 @@ export const ASSET_MANIFEST: AssetManifestItem[] = [
       "lush",
       "town"
     ],
-    "inferredLayer": "overlay"
+    "inferredLayer": "base"
   },
   {
     "id": "extended:hex-water-cursed-soft-waves-1",

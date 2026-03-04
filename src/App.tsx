@@ -13,7 +13,7 @@ import {
   selectionSummary,
   useEditorStore,
 } from "./state/editorStore";
-import { groupedCategories, manifestById, searchManifest } from "./data/manifest";
+import { manifestById, searchManifest } from "./data/manifest";
 import { InspectorPanel } from "./ui/InspectorPanel";
 import { PalettePanel } from "./ui/PalettePanel";
 import { StatusBar } from "./ui/StatusBar";
@@ -55,7 +55,6 @@ export default function App() {
   const fogBrushLevel = useEditorStore((state) => state.fogBrushLevel);
   const selection = useEditorStore((state) => state.selection.cells);
   const searchQuery = useEditorStore((state) => state.searchQuery);
-  const selectedCategory = useEditorStore((state) => state.selectedCategory);
   const lineStart = useEditorStore((state) => state.lineStart);
   const statusMessage = useEditorStore((state) => state.lastStatusMessage);
   const historyPastLength = useEditorStore((state) => state.historyPast.length);
@@ -67,7 +66,6 @@ export default function App() {
   const setFogBrushLevel = useEditorStore((state) => state.setFogBrushLevel);
   const setHoverCoord = useEditorStore((state) => state.setHoverCoord);
   const setSearchQuery = useEditorStore((state) => state.setSearchQuery);
-  const setSelectedCategory = useEditorStore((state) => state.setSelectedCategory);
 
   const beginStroke = useEditorStore((state) => state.beginStroke);
   const commitStroke = useEditorStore((state) => state.commitStroke);
@@ -121,27 +119,9 @@ export default function App() {
     }
   }, [selectedTileId, setSelectedTile]);
 
-  useEffect(() => {
-    if (selectedCategory === "All") {
-      return;
-    }
-    const visibleCategories = new Set(groupedCategories(searchManifest(searchQuery, "all")));
-    if (!visibleCategories.has(selectedCategory)) {
-      setSelectedCategory("All");
-    }
-  }, [searchQuery, selectedCategory, setSelectedCategory]);
-
   const selectedTileName = selectedTileId ? manifestById.get(selectedTileId)?.name ?? selectedTileId : "(none)";
 
-  const filteredItems = useMemo(() => {
-    const items = searchManifest(searchQuery, "all");
-    if (selectedCategory === "All") {
-      return items;
-    }
-    return items.filter((item) => item.category === selectedCategory);
-  }, [searchQuery, selectedCategory]);
-
-  const categories = useMemo(() => groupedCategories(filteredItems), [filteredItems]);
+  const filteredItems = useMemo(() => searchManifest(searchQuery, "all"), [searchQuery]);
 
   const selectedKey = selection[0] ?? null;
   const selectedCell = selectedKey ? project.cells[selectedKey] ?? emptyCell() : null;
@@ -164,21 +144,25 @@ export default function App() {
     (coord: AxialCoord, shiftKey: boolean) => {
       if (activeTool === "brush") {
         paintAt(coord);
+        selectOnly(coord);
         return;
       }
 
       if (activeTool === "erase") {
         eraseAt(coord);
+        selectOnly(coord);
         return;
       }
 
       if (activeTool === "fill") {
         fillFrom(coord);
+        selectOnly(coord);
         return;
       }
 
       if (activeTool === "line") {
         lineTo(coord);
+        selectOnly(coord);
         return;
       }
 
@@ -189,6 +173,7 @@ export default function App() {
 
       if (activeTool === "fog") {
         setFogAt(coord);
+        selectOnly(coord);
         return;
       }
 
@@ -301,13 +286,10 @@ export default function App() {
       <main className="workspace">
         <PalettePanel
           items={filteredItems}
-          categories={categories}
-          selectedCategory={selectedCategory}
           selectedTileId={selectedTileId}
           onPickTile={onPickTile}
           searchQuery={searchQuery}
           onSearchQuery={setSearchQuery}
-          onCategoryChange={setSelectedCategory}
         />
 
         <section className="map-pane">

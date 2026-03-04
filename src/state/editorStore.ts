@@ -5,6 +5,7 @@ import {
   axialKey,
   axialLine,
   isWithinBounds,
+  iterateBounds,
   neighbors,
   parseAxialKey,
 } from "../domain/hexMath";
@@ -24,6 +25,7 @@ import {
 } from "../domain/types";
 
 const HISTORY_LIMIT = 120;
+const DEFAULT_BLANK_BASE_TILE_ID = "base:hex-base-blank";
 
 export type EditorStoreState = {
   project: HexProjectV1;
@@ -206,17 +208,16 @@ function applyBrushToCell(
 
   if (layer === "base") {
     next.baseTileId = selectedTileId;
+    next.overlayTileIds = [];
     return next;
   }
 
   if (layer === "overlay") {
-    next.overlayTileIds = next.overlayTileIds.filter((id) => id !== selectedTileId);
-    next.overlayTileIds.push(selectedTileId);
+    next.overlayTileIds = [selectedTileId];
     return next;
   }
 
-  next.markerTileIds = next.markerTileIds.filter((id) => id !== selectedTileId);
-  next.markerTileIds.push(selectedTileId);
+  next.markerTileIds = [selectedTileId];
   return next;
 }
 
@@ -292,7 +293,26 @@ function setLayerToken(cell: HexLayerSet, layer: EditorLayer, token: string): He
   return next;
 }
 
-const INITIAL_PROJECT = createProject("Untitled Region", DEFAULT_BOUNDS);
+function createBlankBaseFilledCells(bounds: MapBounds): Record<string, HexLayerSet> {
+  const cells: Record<string, HexLayerSet> = {};
+  for (const coord of iterateBounds(bounds)) {
+    cells[axialKey(coord)] = {
+      baseTileId: DEFAULT_BLANK_BASE_TILE_ID,
+      overlayTileIds: [],
+      markerTileIds: [],
+      fog: "none",
+    };
+  }
+  return cells;
+}
+
+function createDefaultProject(name: string, bounds: MapBounds): HexProjectV1 {
+  const project = createProject(name, bounds);
+  project.cells = createBlankBaseFilledCells(bounds);
+  return project;
+}
+
+const INITIAL_PROJECT = createDefaultProject("Untitled Region", DEFAULT_BOUNDS);
 
 export const useEditorStore = create<EditorStoreState>()(
   immer((set) => ({
@@ -787,7 +807,7 @@ export const useEditorStore = create<EditorStoreState>()(
 
     newProject: (name, bounds) => {
       set((state) => {
-        const project = createProject(name || "Untitled Region", bounds);
+        const project = createDefaultProject(name || "Untitled Region", bounds);
         state.project = project;
         state.selection = { cells: [] };
         state.hoverCoord = null;
